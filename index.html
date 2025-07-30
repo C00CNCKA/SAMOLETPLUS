@@ -1,0 +1,1394 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>САМОЛЕТ ПЛЮС - Продажа недвижимости и ремонт под ключ</title>
+    <meta name="description" content="САМОЛЕТ ПЛЮС - ваш надежный партнер в продаже недвижимости и ремонте под ключ. Профессиональные услуги, гарантия качества, индивидуальный подход.">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+        
+        * {
+            font-family: 'Inter', sans-serif;
+        }
+        
+        .page {
+            display: none;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.6s ease-in-out;
+        }
+        
+        .page.active {
+            display: block;
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        .nav-link {
+            position: relative;
+            transition: all 0.3s ease;
+        }
+        
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: #1e40af;
+            transition: width 0.3s ease;
+        }
+        
+        .nav-link:hover::after {
+            width: 100%;
+        }
+        
+        .hero-overlay {
+            background: linear-gradient(135deg, rgba(30, 64, 175, 0.85) 0%, rgba(59, 130, 246, 0.75) 100%);
+        }
+        
+        .card-hover {
+            transition: all 0.3s ease;
+            transform: translateY(0);
+        }
+        
+        .card-hover:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, #1e40af 0%, #3b82f6 100%);
+            transition: all 0.3s ease;
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(30, 64, 175, 0.3);
+        }
+        
+        .form-input {
+            transition: all 0.3s ease;
+        }
+        
+        .form-input:focus {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(30, 64, 175, 0.2);
+        }
+        
+        .portfolio-item {
+            position: relative;
+            overflow: hidden;
+            border-radius: 12px;
+        }
+        
+        .portfolio-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, rgba(30, 64, 175, 0.9) 0%, rgba(59, 130, 246, 0.8) 100%);
+            opacity: 0;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            backdrop-filter: blur(5px);
+        }
+        
+        .portfolio-item:hover .portfolio-overlay {
+            opacity: 1;
+        }
+        
+        .service-card {
+            background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+            border: 1px solid #e2e8f0;
+            transition: all 0.3s ease;
+        }
+        
+        .price-card {
+            position: relative;
+            overflow: hidden;
+            border: 2px solid #e2e8f0;
+            transition: all 0.3s ease;
+        }
+        
+        .price-card.featured {
+            border-color: #1e40af;
+            background: linear-gradient(135deg, #f0f7ff 0%, #e0f2fe 100%);
+        }
+        
+        .loading {
+            opacity: 0;
+            transform: translateY(30px);
+        }
+        
+        .loaded {
+            opacity: 1;
+            transform: translateY(0);
+            transition: all 0.8s ease;
+        }
+        
+        .mobile-menu {
+            transform: translateX(-100%);
+            transition: transform 0.3s ease;
+        }
+        
+        .mobile-menu.open {
+            transform: translateX(0);
+        }
+        
+        .parallax-bg {
+            background-attachment: fixed;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-size: cover;
+        }
+    </style>
+</head>
+<body class="bg-gray-50">
+    <!-- Navigation -->
+    <nav class="bg-white shadow-lg sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-20">
+                <div class="flex items-center">
+                    <a href="#" class="text-2xl font-bold text-blue-900 cursor-pointer" data-page="home">
+                        <i class="fas fa-plane text-blue-600 mr-2"></i>
+                        САМОЛЕТ ПЛЮС
+                    </a>
+                </div>
+                
+                <!-- Desktop Menu -->
+                <div class="hidden md:flex space-x-8">
+                    <a href="#" class="nav-link text-gray-700 hover:text-blue-600 font-medium" data-page="about">О нас</a>
+                    <a href="#" class="nav-link text-gray-700 hover:text-blue-600 font-medium" data-page="services">Услуги</a>
+                    <a href="#" class="nav-link text-gray-700 hover:text-blue-600 font-medium" data-page="portfolio">Портфолио</a>
+                    <a href="#" class="nav-link text-gray-700 hover:text-blue-600 font-medium" data-page="prices">Цены</a>
+                    <a href="#" class="nav-link text-gray-700 hover:text-blue-600 font-medium" data-page="contacts">Контакты</a>
+                    <a href="#" class="btn-primary text-white px-6 py-2 rounded-lg font-medium" data-page="application">Оставить заявку</a>
+                </div>
+                
+                <!-- Mobile Menu Button -->
+                <button class="md:hidden text-gray-700 hover:text-blue-600" id="mobile-menu-btn">
+                    <i class="fas fa-bars text-2xl"></i>
+                </button>
+            </div>
+        </div>
+        
+        <!-- Mobile Menu -->
+        <div class="mobile-menu fixed inset-0 bg-white z-40 md:hidden" id="mobile-menu">
+            <div class="flex justify-between items-center p-4 border-b">
+                <a href="#" class="text-xl font-bold text-blue-900 cursor-pointer" data-page="home">
+                    <i class="fas fa-plane text-blue-600 mr-2"></i>
+                    САМОЛЕТ ПЛЮС
+                </a>
+                <button class="text-gray-700 hover:text-blue-600" id="close-menu">
+                    <i class="fas fa-times text-2xl"></i>
+                </button>
+            </div>
+            <div class="p-6 space-y-4">
+                <a href="#" class="block text-gray-700 hover:text-blue-600 font-medium text-lg" data-page="about">О нас</a>
+                <a href="#" class="block text-gray-700 hover:text-blue-600 font-medium text-lg" data-page="services">Услуги</a>
+                <a href="#" class="block text-gray-700 hover:text-blue-600 font-medium text-lg" data-page="portfolio">Портфолио</a>
+                <a href="#" class="block text-gray-700 hover:text-blue-600 font-medium text-lg" data-page="prices">Цены</a>
+                <a href="#" class="block text-gray-700 hover:text-blue-600 font-medium text-lg" data-page="contacts">Контакты</a>
+                <a href="#" class="btn-primary text-white px-6 py-3 rounded-lg font-medium block text-center" data-page="application">Оставить заявку</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Home Page -->
+    <div id="home" class="page active">
+        <!-- Hero Section -->
+        <section class="relative h-screen flex items-center justify-center">
+            <div class="absolute inset-0">
+                <img src="https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2072&q=80" alt="Интерьер" class="w-full h-full object-cover">
+                <div class="hero-overlay absolute inset-0"></div>
+            </div>
+            <div class="relative z-10 text-center text-white px-4">
+                <h1 class="text-5xl md:text-7xl font-bold mb-6 leading-tight">
+                    САМОЛЕТ ПЛЮС
+                </h1>
+                <p class="text-xl md:text-2xl mb-8 max-w-3xl mx-auto leading-relaxed">
+                    Профессиональная продажа недвижимости и качественный ремонт под ключ
+                </p>
+                <div class="space-x-4">
+                    <button class="btn-primary text-white px-8 py-4 rounded-lg text-lg font-semibold hover:scale-105 transition-all" data-page="services">
+                        Узнать о услугах
+                    </button>
+                    <button class="border-2 border-white text-white px-8 py-4 rounded-lg text-lg font-semibold hover:bg-white hover:text-blue-900 transition-all" data-page="contacts">
+                        Связаться с нами
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Features Section -->
+        <section class="py-20 bg-white">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="text-center mb-16">
+                    <h2 class="text-4xl font-bold text-gray-900 mb-4">Почему выбирают нас</h2>
+                    <p class="text-xl text-gray-600 max-w-3xl mx-auto">
+                        Мы предлагаем комплексные решения для вашей недвижимости
+                    </p>
+                </div>
+                <div class="grid md:grid-cols-3 gap-8">
+                    <div class="text-center card-hover p-8 rounded-xl">
+                        <div class="w-20 h-20 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-6">
+                            <i class="fas fa-home text-blue-600 text-3xl"></i>
+                        </div>
+                        <h3 class="text-2xl font-semibold text-gray-900 mb-4">Продажа недвижимости</h3>
+                        <p class="text-gray-600 leading-relaxed">
+                            Подберем идеальную недвижимость под ваши требования и бюджет
+                        </p>
+                    </div>
+                    <div class="text-center card-hover p-8 rounded-xl">
+                        <div class="w-20 h-20 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-6">
+                            <i class="fas fa-tools text-blue-600 text-3xl"></i>
+                        </div>
+                        <h3 class="text-2xl font-semibold text-gray-900 mb-4">Ремонт под ключ</h3>
+                        <p class="text-gray-600 leading-relaxed">
+                            Полный цикл ремонтных работ от дизайна до финальной отделки
+                        </p>
+                    </div>
+                    <div class="text-center card-hover p-8 rounded-xl">
+                        <div class="w-20 h-20 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-6">
+                            <i class="fas fa-shield-alt text-blue-600 text-3xl"></i>
+                        </div>
+                        <h3 class="text-2xl font-semibold text-gray-900 mb-4">Гарантия качества</h3>
+                        <p class="text-gray-600 leading-relaxed">
+                            Гарантия на все виды работ до 5 лет и постгарантийное обслуживание
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- About Page -->
+    <div id="about" class="page">
+        <section class="py-20 bg-white">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="grid lg:grid-cols-2 gap-16 items-center">
+                    <div>
+                        <h1 class="text-4xl font-bold text-gray-900 mb-6">О компании САМОЛЕТ ПЛЮС</h1>
+                        <p class="text-lg text-gray-600 mb-6 leading-relaxed">
+                            Мы - команда профессионалов с 10-летним опытом работы на рынке недвижимости и ремонта. 
+                            Наша миссия - превращать ваши мечты о комфортном жилье в реальность.
+                        </p>
+                        <p class="text-lg text-gray-600 mb-8 leading-relaxed">
+                            Начиная с 2014 года, мы успешно реализовали более 500 проектов по продаже недвижимости 
+                            и провели свыше 300 ремонтов под ключ. Каждый проект для нас - это индивидуальный подход 
+                            и внимание к мельчайшим деталям.
+                        </p>
+                        <div class="grid grid-cols-2 gap-8 mb-8">
+                            <div>
+                                <div class="text-3xl font-bold text-blue-600 mb-2">500+</div>
+                                <div class="text-gray-600">Продано недвижимости</div>
+                            </div>
+                            <div>
+                                <div class="text-3xl font-bold text-blue-600 mb-2">300+</div>
+                                <div class="text-gray-600">Ремонтов под ключ</div>
+                            </div>
+                            <div>
+                                <div class="text-3xl font-bold text-blue-600 mb-2">10 лет</div>
+                                <div class="text-gray-600">Опыта работы</div>
+                            </div>
+                            <div>
+                                <div class="text-3xl font-bold text-blue-600 mb-2">98%</div>
+                                <div class="text-gray-600">Довольных клиентов</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div>
+                        <img src="https://images.unsplash.com/photo-1560472354-b33ff0c44a43?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80" alt="Компания" class="rounded-2xl shadow-2xl">
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="py-20 bg-gray-50">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="text-center mb-16">
+                    <h2 class="text-4xl font-bold text-gray-900 mb-4">Наша команда</h2>
+                    <p class="text-xl text-gray-600">Лучшие специалисты в своей области</p>
+                </div>
+                <div class="grid md:grid-cols-3 gap-8">
+                    <div class="text-center">
+                        <!--<img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80"--> alt="Директор" class="w-48 h-48 rounded-full mx-auto mb-4 object-cover">
+                        <h3 class="text-xl font-semibold text-gray-900 mb-2">Алексей Звященко</h3>
+                        <p class="text-blue-600 mb-2">Генеральный директор</p>
+                        <p class="text-gray-600">10 лет в недвижимости и строительстве</p>
+                    </div>
+                    <div class="text-center">
+                        <!--<img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80"--> alt="Дизайнер" class="w-48 h-48 rounded-full mx-auto mb-4 object-cover">
+                        <h3 class="text-xl font-semibold text-gray-900 mb-2">Дарья Звященко</h3>
+                        <p class="text-blue-600 mb-2">Главный дизайнер</p>
+                        <p class="text-gray-600">8 лет опыта в дизайне интерьеров</p>
+                    </div>
+                    <div class="text-center">
+                        <!--<img src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80"--> alt="Менеджер" class="w-48 h-48 rounded-full mx-auto mb-4 object-cover">
+                        <h3 class="text-xl font-semibold text-gray-900 mb-2">Дмитрий </h3>
+                        <p class="text-blue-600 mb-2">Руководитель проектов</p>
+                        <p class="text-gray-600">12 лет в управлении строительными проектами</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- Services Page -->
+    <div id="services" class="page">
+        <section class="py-20 bg-white">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="text-center mb-16">
+                    <h1 class="text-4xl font-bold text-gray-900 mb-4">Наши услуги</h1>
+                    <p class="text-xl text-gray-600 max-w-3xl mx-auto">
+                        Комплексный подход к созданию вашего идеального пространства
+                    </p>
+                </div>
+                
+                <div class="grid lg:grid-cols-3 gap-8">
+                    <!-- Ремонт квартир -->
+                    <div class="service-card p-8 rounded-2xl">
+                        <div class="w-16 h-16 bg-blue-100 rounded-lg flex items-center justify-center mb-6">
+                            <i class="fas fa-building text-blue-600 text-2xl"></i>
+                        </div>
+                        <h3 class="text-2xl font-bold mb-4">Ремонт квартир под ключ</h3>
+                        <p class="text-gray-600 mb-6 leading-relaxed">
+                            Полный цикл ремонтных работ в квартирах любой сложности. От косметического ремонта 
+                            до полного перепланирования пространства с учетом ваших пожеланий.
+                        </p>
+                        <ul class="space-y-3 mb-6">
+                            <li class="flex items-center">
+                                <i class="fas fa-check text-green-500 mr-3"></i>
+                                <span>Косметический ремонт от 7 дней</span>
+                            </li>
+                            <li class="flex items-center">
+                                <i class="fas fa-check text-green-500 mr-3"></i>
+                                <span>Капитальный ремонт от 30 дней</span>
+                            </li>
+                            <li class="flex items-center">
+                                <i class="fas fa-check text-green-500 mr-3"></i>
+                                <span>Элитный ремонт с премиум материалами</span>
+                            </li>
+                        </ul>
+                        <button class="btn-primary text-white px-6 py-3 rounded-lg font-medium w-full" data-page="application">
+                            Заказать ремонт
+                        </button>
+                    </div>
+
+                    <!-- Ремонт загородных домов -->
+                    <div class="service-card p-8 rounded-2xl">
+                        <div class="w-16 h-16 bg-blue-100 rounded-lg flex items-center justify-center mb-6">
+                            <i class="fas fa-home text-blue-600 text-2xl"></i>
+                        </div>
+                        <h3 class="text-2xl font-bold mb-4">Ремонт загородных домов</h3>
+                        <p class="text-gray-600 mb-6 leading-relaxed">
+                            Специализированный подход к ремонту коттеджей, таунхаусов и частных домов. 
+                            Работаем с любыми типами строений и архитектурными особенностями.
+                        </p>
+                        <ul class="space-y-3 mb-6">
+                            <li class="flex items-center">
+                                <i class="fas fa-check text-green-500 mr-3"></i>
+                                <span>Утепление и гидроизоляция фасадов</span>
+                            </li>
+                            <li class="flex items-center">
+                                <i class="fas fa-check text-green-500 mr-3"></i>
+                                <span>Внутренняя отделка и инженерные системы</span>
+                            </li>
+                            <li class="flex items-center">
+                                <i class="fas fa-check text-green-500 mr-3"></i>
+                                <span>Ландшафтный дизайн и благоустройство</span>
+                            </li>
+                        </ul>
+                        <button class="btn-primary text-white px-6 py-3 rounded-lg font-medium w-full" data-page="application">
+                            Заказать ремонт
+                        </button>
+                    </div>
+
+                    <!-- Демонтажные работы -->
+                    <div class="service-card p-8 rounded-2xl">
+                        <div class="w-16 h-16 bg-blue-100 rounded-lg flex items-center justify-center mb-6">
+                            <i class="fas fa-hammer text-blue-600 text-2xl"></i>
+                        </div>
+                        <h3 class="text-2xl font-bold mb-4">Демонтажные работы</h3>
+                        <p class="text-gray-600 mb-6 leading-relaxed">
+                            Профессиональный демонтаж старых покрытий, перегородок и коммуникаций. 
+                            Безопасное и чистое выполнение работ с соблюдением всех нормативов.
+                        </p>
+                        <ul class="space-y-3 mb-6">
+                            <li class="flex items-center">
+                                <i class="fas fa-check text-green-500 mr-3"></i>
+                                <span>Демонтаж перегородок и стен</span>
+                            </li>
+                            <li class="flex items-center">
+                                <i class="fas fa-check text-green-500 mr-3"></i>
+                                <span>Вывоз строительного мусора</span>
+                            </li>
+                            <li class="flex items-center">
+                                <i class="fas fa-check text-green-500 mr-3"></i>
+                                <span>Очистка помещений</span>
+                            </li>
+                        </ul>
+                        <button class="btn-primary text-white px-6 py-3 rounded-lg font-medium w-full" data-page="application">
+                            Узнать цену
+                        </button>
+                    </div>
+
+                    <!-- Дизайн проекты -->
+                    <div class="service-card p-8 rounded-2xl lg:col-span-3">
+                        <div class="grid lg:grid-cols-2 gap-8 items-start">
+                            <div>
+                                <div class="w-16 h-16 bg-blue-100 rounded-lg flex items-center justify-center mb-6">
+                                    <i class="fas fa-paint-brush text-blue-600 text-2xl"></i>
+                                </div>
+                                <h3 class="text-2xl font-bold mb-4">Составление дизайн-проекта</h3>
+                                <p class="text-gray-600 mb-6 leading-relaxed">
+                                    Разработчики студии создадут интерьер в любом стиле дизайна интерьера квартиры. 
+                                    При этом мы максимально поможем адаптировать элементы выбранной стилистики к Вашим 
+                                    пожеланиям и виденью проекта.
+                                </p>
+                                
+                                <div class="bg-blue-50 p-6 rounded-xl mb-6">
+                                    <h4 class="font-semibold mb-3 text-blue-900">Что вы получите:</h4>
+                                    <ul class="space-y-2 text-sm text-gray-700">
+                                        <li>• Уникальное планировочное решение</li>
+                                        <li>• Все необходимые чертежи для дальнейшей реализации проекта</li>
+                                        <li>• Соблюдение всех технических норм и законодательства</li>
+                                        <li>• Полный контроль закупки всех материалов, мебели и техники</li>
+                                    </ul>
+                                </div>
+
+                                <div class="mb-6">
+                                    <h4 class="font-semibold mb-3">Основные этапы дизайн-проекта</h4>
+                                    
+                                    <div class="mb-4">
+                                        <h5 class="font-medium text-blue-600 mb-2">1 Этап</h5>
+                                        <ul class="space-y-1 text-sm text-gray-600">
+                                            <li>• <strong>Обмер помещения</strong> - Точное измерение всего помещения, в том числе с нестандартной планировкой</li>
+                                            <li>• <strong>Техническое задание</strong> - Составление подробного технического задания для подрядчиков</li>
+                                            <li>• <strong>Планировочное решение</strong> - Наши дизайнеры вместе с вами составят и согласуют планировочное решение</li>
+                                        </ul>
+                                    </div>
+                                    
+                                    <div class="mb-4">
+                                        <h5 class="font-medium text-blue-600 mb-2">2 Этап</h5>
+                                        <ul class="space-y-1 text-sm text-gray-600">
+                                            <li>• Подбор мебели и материалов (коллажи)</li>
+                                            <li>• Проектирование в Sketch Up</li>
+                                            <li>• Фотореалистичная визуализация в 3D Max</li>
+                                        </ul>
+                                    </div>
+                                    
+                                    <div class="mb-4">
+                                        <h5 class="font-medium text-blue-600 mb-2">3 Этап</h5>
+                                        <ul class="space-y-1 text-sm text-gray-600">
+                                            <li>• Чертежи рабочей документации для строителей</li>
+                                            <li>• Спецификации чистовых и отделочных материалов и мебели</li>
+                                        </ul>
+                                    </div>
+                                </div>
+
+                                <div class="bg-gray-100 p-4 rounded-lg mb-6">
+                                    <p class="text-sm text-gray-700"><strong>Дизайн-проект от 3х месяцев</strong></p>
+                                </div>
+
+                                <div class="grid md:grid-cols-3 gap-4 mb-6">
+                                    <div class="text-center p-4 border rounded-lg">
+                                        <h5 class="font-semibold mb-2 text-sm">Экспресс проект</h5>
+                                        <p class="text-xs text-gray-600 mb-2">Срок от 10-ти рабочих дней</p>
+                                        <p class="text-blue-600 font-bold">от 3 000₽/м²</p>
+                                    </div>
+                                    <div class="text-center p-4 border rounded-lg">
+                                        <h5 class="font-semibold mb-2 text-sm">Дизайн проект</h5>
+                                        <p class="text-xs text-gray-600 mb-2">Срок от 2-х месяцев</p>
+                                        <p class="text-blue-600 font-bold">от 6 000₽/м²</p>
+                                    </div>
+                                    <div class="text-center p-4 border rounded-lg">
+                                        <h5 class="font-semibold mb-2 text-sm">Базовый проект</h5>
+                                        <p class="text-xs text-gray-600 mb-2">Срок от 4-х рабочих дней</p>
+                                        <p class="text-blue-600 font-bold">от 40 000₽</p>
+                                    </div>
+                                </div>
+
+                                <div class="bg-yellow-50 p-4 rounded-lg mb-6">
+                                    <h5 class="font-semibold mb-2">Этапы оплаты:</h5>
+                                    <ul class="space-y-1 text-sm text-gray-700">
+                                        <li><strong>25%</strong> Эскизный проект - предоплата при подписании договора</li>
+                                        <li><strong>25%</strong> Эскизный проект - после утверждения перед 3D-визуализацией</li>
+                                        <li><strong>25%</strong> Рабочий проект - после утверждения 3D-визуализации</li>
+                                        <li><strong>25%</strong> Финальный расчет при получении проекта</li>
+                                    </ul>
+                                </div>
+
+                                <button class="btn-primary text-white px-8 py-3 rounded-lg font-medium w-full" data-page="application">
+                                    Рассчитать проект
+                                </button>
+                            </div>
+                            <div>
+                                <img src="https://images.unsplash.com/photo-1586023492125-27b2c045efd7?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80" alt="Дизайн проект" class="rounded-2xl shadow-lg mb-4">
+                                <div class="grid grid-cols-2 gap-4">
+                                    <img src="https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80" alt="Планировка" class="rounded-xl shadow">
+                                    <img src="https://images.unsplash.com/photo-1616486338812-3dadae4b4c8b?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80" alt="3D визуализация" class="rounded-xl shadow">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- Portfolio Page -->
+    <div id="portfolio" class="page">
+        <section class="py-20 bg-white">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="text-center mb-16">
+                    <h1 class="text-4xl font-bold text-gray-900 mb-4">Наши работы</h1>
+                    <p class="text-xl text-gray-600">Примеры выполненных проектов</p>
+                </div>
+                
+                <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                    <!-- Project 1 -->
+                    <div class="portfolio-item rounded-2xl overflow-hidden relative">
+                        <div class="carousel relative w-full h-80">
+                            <img src="https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Квартира 85 м²" class="w-full h-full object-cover absolute inset-0 transition-opacity duration-500">
+                            <img src="https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Квартира 85 м² – вид 2" class="w-full h-full object-cover absolute inset-0 transition-opacity duration-500 opacity-0">
+                            <img src="https://images.unsplash.com/photo-1600566753086-00f18fb6b3ea?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Квартира 85 м² – вид 3" class="w-full h-full object-cover absolute inset-0 transition-opacity duration-500 opacity-0">
+                            <img src="https://images.unsplash.com/photo-1600607687644-c7171b42498b?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Квартира 85 м² – вид 4" class="w-full h-full object-cover absolute inset-0 transition-opacity duration-500 opacity-0">
+                            <!-- стрелки -->
+                            <button class="arrow-left absolute left-2 top-1/2 -translate-y-1/2 bg-black/40 text-white rounded-full w-9 h-9 flex items-center justify-center hover:bg-black/70 transition z-10">
+                                <i class="fas fa-chevron-left"></i>
+                            </button>
+                            <button class="arrow-right absolute right-2 top-1/2 -translate-y-1/2 bg-black/40 text-white rounded-full w-9 h-9 flex items-center justify-center hover:bg-black/70 transition z-10">
+                                <i class="fas fa-chevron-right"></i>
+                            </button>
+                        </div>
+                        
+                    </div>
+
+                    <!-- Project 2 -->
+                    <div class="portfolio-item rounded-2xl overflow-hidden relative">
+                        <div class="carousel relative w-full h-80">
+                            <img src="https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Квартира 85 м²" class="w-full h-full object-cover absolute inset-0 transition-opacity duration-500">
+                            <img src="https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Квартира 85 м² – вид 2" class="w-full h-full object-cover absolute inset-0 transition-opacity duration-500 opacity-0">
+                            <img src="https://images.unsplash.com/photo-1600566753086-00f18fb6b3ea?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Квартира 85 м² – вид 3" class="w-full h-full object-cover absolute inset-0 transition-opacity duration-500 opacity-0">
+                            <img src="https://images.unsplash.com/photo-1600607687644-c7171b42498b?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Квартира 85 м² – вид 4" class="w-full h-full object-cover absolute inset-0 transition-opacity duration-500 opacity-0">
+                            <!-- стрелки -->
+                            <button class="arrow-left absolute left-2 top-1/2 -translate-y-1/2 bg-black/40 text-white rounded-full w-9 h-9 flex items-center justify-center hover:bg-black/70 transition z-10">
+                                <i class="fas fa-chevron-left"></i>
+                            </button>
+                            <button class="arrow-right absolute right-2 top-1/2 -translate-y-1/2 bg-black/40 text-white rounded-full w-9 h-9 flex items-center justify-center hover:bg-black/70 transition z-10">
+                                <i class="fas fa-chevron-right"></i>
+                            </button>
+                        </div>
+                        
+                    </div>
+
+                    <!-- Project 3 -->
+                    <div class="portfolio-item rounded-2xl overflow-hidden relative">
+                        <div class="carousel relative w-full h-80">
+                            <img src="https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Квартира 85 м²" class="w-full h-full object-cover absolute inset-0 transition-opacity duration-500">
+                            <img src="https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Квартира 85 м² – вид 2" class="w-full h-full object-cover absolute inset-0 transition-opacity duration-500 opacity-0">
+                            <img src="https://images.unsplash.com/photo-1600566753086-00f18fb6b3ea?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Квартира 85 м² – вид 3" class="w-full h-full object-cover absolute inset-0 transition-opacity duration-500 opacity-0">
+                            <img src="https://images.unsplash.com/photo-1600607687644-c7171b42498b?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Квартира 85 м² – вид 4" class="w-full h-full object-cover absolute inset-0 transition-opacity duration-500 opacity-0">
+                            <!-- стрелки -->
+                            <button class="arrow-left absolute left-2 top-1/2 -translate-y-1/2 bg-black/40 text-white rounded-full w-9 h-9 flex items-center justify-center hover:bg-black/70 transition z-10">
+                                <i class="fas fa-chevron-left"></i>
+                            </button>
+                            <button class="arrow-right absolute right-2 top-1/2 -translate-y-1/2 bg-black/40 text-white rounded-full w-9 h-9 flex items-center justify-center hover:bg-black/70 transition z-10">
+                                <i class="fas fa-chevron-right"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Project 4 -->
+                    <div class="portfolio-item rounded-2xl overflow-hidden relative">
+                        <div class="carousel relative w-full h-80">
+                            <img src="https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Квартира 85 м²" class="w-full h-full object-cover absolute inset-0 transition-opacity duration-500">
+                            <img src="https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Квартира 85 м² – вид 2" class="w-full h-full object-cover absolute inset-0 transition-opacity duration-500 opacity-0">
+                            <img src="https://images.unsplash.com/photo-1600566753086-00f18fb6b3ea?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Квартира 85 м² – вид 3" class="w-full h-full object-cover absolute inset-0 transition-opacity duration-500 opacity-0">
+                            <img src="https://images.unsplash.com/photo-1600607687644-c7171b42498b?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Квартира 85 м² – вид 4" class="w-full h-full object-cover absolute inset-0 transition-opacity duration-500 opacity-0">
+                            <!-- стрелки -->
+                            <button class="arrow-left absolute left-2 top-1/2 -translate-y-1/2 bg-black/40 text-white rounded-full w-9 h-9 flex items-center justify-center hover:bg-black/70 transition z-10">
+                                <i class="fas fa-chevron-left"></i>
+                            </button>
+                            <button class="arrow-right absolute right-2 top-1/2 -translate-y-1/2 bg-black/40 text-white rounded-full w-9 h-9 flex items-center justify-center hover:bg-black/70 transition z-10">
+                                <i class="fas fa-chevron-right"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Project 5 -->
+                    <div class="portfolio-item rounded-2xl overflow-hidden relative">
+                        <div class="carousel relative w-full h-80">
+                            <img src="https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Квартира 85 м²" class="w-full h-full object-cover absolute inset-0 transition-opacity duration-500">
+                            <img src="https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Квартира 85 м² – вид 2" class="w-full h-full object-cover absolute inset-0 transition-opacity duration-500 opacity-0">
+                            <img src="https://images.unsplash.com/photo-1600566753086-00f18fb6b3ea?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Квартира 85 м² – вид 3" class="w-full h-full object-cover absolute inset-0 transition-opacity duration-500 opacity-0">
+                            <img src="https://images.unsplash.com/photo-1600607687644-c7171b42498b?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Квартира 85 м² – вид 4" class="w-full h-full object-cover absolute inset-0 transition-opacity duration-500 opacity-0">
+                            <!-- стрелки -->
+                            <button class="arrow-left absolute left-2 top-1/2 -translate-y-1/2 bg-black/40 text-white rounded-full w-9 h-9 flex items-center justify-center hover:bg-black/70 transition z-10">
+                                <i class="fas fa-chevron-left"></i>
+                            </button>
+                            <button class="arrow-right absolute right-2 top-1/2 -translate-y-1/2 bg-black/40 text-white rounded-full w-9 h-9 flex items-center justify-center hover:bg-black/70 transition z-10">
+                                <i class="fas fa-chevron-right"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Project 6 -->
+                    <div class="portfolio-item rounded-2xl overflow-hidden relative">
+                        <div class="carousel relative w-full h-80">
+                            <img src="https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Квартира 85 м²" class="w-full h-full object-cover absolute inset-0 transition-opacity duration-500">
+                            <img src="https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Квартира 85 м² – вид 2" class="w-full h-full object-cover absolute inset-0 transition-opacity duration-500 opacity-0">
+                            <img src="https://images.unsplash.com/photo-1600566753086-00f18fb6b3ea?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Квартира 85 м² – вид 3" class="w-full h-full object-cover absolute inset-0 transition-opacity duration-500 opacity-0">
+                            <img src="https://images.unsplash.com/photo-1600607687644-c7171b42498b?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Квартира 85 м² – вид 4" class="w-full h-full object-cover absolute inset-0 transition-opacity duration-500 opacity-0">
+                            <!-- стрелки -->
+                            <button class="arrow-left absolute left-2 top-1/2 -translate-y-1/2 bg-black/40 text-white rounded-full w-9 h-9 flex items-center justify-center hover:bg-black/70 transition z-10">
+                                <i class="fas fa-chevron-left"></i>
+                            </button>
+                            <button class="arrow-right absolute right-2 top-1/2 -translate-y-1/2 bg-black/40 text-white rounded-full w-9 h-9 flex items-center justify-center hover:bg-black/70 transition z-10">
+                                <i class="fas fa-chevron-right"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- Prices Page -->
+    <div id="prices" class="page">
+        <section class="py-20 bg-gray-50">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="text-center mb-16">
+                    <h1 class="text-4xl font-bold text-gray-900 mb-4">Цены на наши услуги</h1>
+                    <p class="text-xl text-gray-600">Прозрачное ценообразование без скрытых платежей</p>
+                </div>
+                
+                
+
+                <!-- Additional Services -->
+                
+
+                <!-- Detailed Tariffs Section -->
+                <div class="mt-20">
+                    <h2 class="text-3xl font-bold text-center text-gray-900 mb-4">Цена отделки квартиры в Ленинградской области</h2>
+                    <p class="text-center text-gray-600 mb-10">*Цены указаны с черновыми материалами</p>
+
+                    <div class="space-y-12">
+                        <!-- Tarif Standart -->
+                        <div class="bg-white p-8 rounded-2xl shadow-lg">
+                            <div class="flex flex-col md:flex-row md:items-center md:justify-between mb-6">
+                                <h3 class="text-2xl font-bold text-gray-900">Тариф «Стандарт»</h3>
+                                <p class="text-3xl font-bold text-blue-600 mt-2 md:mt-0">от 35 000 ₽/м²</p>
+                            </div>
+                            <div class="grid md:grid-cols-3 gap-6 text-sm">
+                                <div>
+                                    <h4 class="font-semibold text-gray-800 mb-2">Черновые работы</h4>
+                                    <ul class="list-disc list-inside text-gray-600 space-y-1">
+                                        <li>Устройство стен и перегородок из ПГП</li>
+                                        <li>Штукатурка стен по маякам до 2 см</li>
+                                        <li>Штукатурка откосов по маякам</li>
+                                        <li>Гидроизоляция пола всех помещений</li>
+                                        <li>Стяжка пола до 5 см</li>
+                                    </ul>
+                                </div>
+                                <div>
+                                    <h4 class="font-semibold text-gray-800 mb-2">Инженерные работы</h4>
+                                    <ul class="list-disc list-inside text-gray-600 space-y-1">
+                                        <li>Монтаж водоснабжения металлополимерными трубами</li>
+                                        <li>Монтаж отопления металлополимерными трубами</li>
+                                        <li>Монтаж канализации и водоотведения</li>
+                                        <li>Монтаж узла учета водоснабжения и отопления</li>
+                                    </ul>
+                                </div>
+                                <div>
+                                    <h4 class="font-semibold text-gray-800 mb-2">Чистовые работы</h4>
+                                    <ul class="list-disc list-inside text-gray-600 space-y-1">
+                                        <li>Облицовка стен керамогранитом до 60×60 см</li>
+                                        <li>Облицовка пола керамогранитом до 60×60 см</li>
+                                        <li>Затирка швов эластичной затиркой</li>
+                                        <li>Покраска стен в два слоя</li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <div class="mt-6 text-center">
+                                <button class="btn-primary text-white px-8 py-2 rounded-lg font-medium" data-page="application">Рассчитать стоимость</button>
+                            </div>
+                        </div>
+
+                        <!-- Tarif Comfort -->
+                        <div class="bg-white p-8 rounded-2xl shadow-lg">
+                            <div class="flex flex-col md:flex-row md:items-center md:justify-between mb-6">
+                                <h3 class="text-2xl font-bold text-gray-900">Тариф «Комфорт»</h3>
+                                <p class="text-3xl font-bold text-blue-600 mt-2 md:mt-0">от 45 000 ₽/м²</p>
+                            </div>
+                            <div class="grid md:grid-cols-3 gap-6 text-sm">
+                                <div>
+                                    <h4 class="font-semibold text-gray-800 mb-2">Черновые работы</h4>
+                                    <ul class="list-disc list-inside text-gray-600 space-y-1">
+                                        <li>Устройство стен и перегородок из ПГП</li>
+                                        <li>Штукатурка стен по маякам до 2 см</li>
+                                        <li>Штукатурка откосов по маякам</li>
+                                        <li>Гидроизоляция пола всех помещений</li>
+                                    </ul>
+                                </div>
+                                <div>
+                                    <h4 class="font-semibold text-gray-800 mb-2">Инженерные работы</h4>
+                                    <ul class="list-disc list-inside text-gray-600 space-y-1">
+                                        <li>Монтаж водоснабжения металлополимерными трубами</li>
+                                        <li>Монтаж отопления металлополимерными трубами</li>
+                                        <li>Монтаж и подключение системы Аквастоп</li>
+                                        <li>Монтаж канализации и водоотведения</li>
+                                    </ul>
+                                </div>
+                                <div>
+                                    <h4 class="font-semibold text-gray-800 mb-2">Чистовые работы</h4>
+                                    <ul class="list-disc list-inside text-gray-600 space-y-1">
+                                        <li>Облицовка стен керамогранитом до 120×60 см</li>
+                                        <li>Облицовка пола керамогранитом до 120×60 см</li>
+                                        <li>Затирка швов керамогранита эластичной затиркой</li>
+                                        <li>Затирка швов эпоксидной затиркой</li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <div class="mt-6 text-center">
+                                <button class="btn-primary text-white px-8 py-2 rounded-lg font-medium" data-page="application">Рассчитать стоимость</button>
+                            </div>
+                        </div>
+
+                        <!-- Tarif Premium -->
+                        <div class="bg-white p-8 rounded-2xl shadow-lg">
+                            <div class="flex flex-col md:flex-row md:items-center md:justify-between mb-6">
+                                <h3 class="text-2xl font-bold text-gray-900">Тариф «Премиум»</h3>
+                                <p class="text-3xl font-bold text-blue-600 mt-2 md:mt-0">от 55 000 ₽/м²</p>
+                            </div>
+                            <div class="grid md:grid-cols-3 gap-6 text-sm">
+                                <div>
+                                    <h4 class="font-semibold text-gray-800 mb-2">Черновые работы</h4>
+                                    <ul class="list-disc list-inside text-gray-600 space-y-1">
+                                        <li>Устройство стен и перегородок из ПГП</li>
+                                        <li>Штукатурка стен по маякам до 2 см</li>
+                                        <li>Штукатурка откосов по маякам</li>
+                                        <li>Гидроизоляция пола всех помещений</li>
+                                    </ul>
+                                </div>
+                                <div>
+                                    <h4 class="font-semibold text-gray-800 mb-2">Инженерные работы</h4>
+                                    <ul class="list-disc list-inside text-gray-600 space-y-1">
+                                        <li>Монтаж водоснабжения металлополимерными трубами</li>
+                                        <li>Монтаж отопления металлополимерными трубами</li>
+                                        <li>Монтаж и подключение системы Аквастоп</li>
+                                        <li>Монтаж и подключение проточного водонагревателя</li>
+                                    </ul>
+                                </div>
+                                <div>
+                                    <h4 class="font-semibold text-gray-800 mb-2">Чистовые работы</h4>
+                                    <ul class="list-disc list-inside text-gray-600 space-y-1">
+                                        <li>Облицовка стен керамогранитом до 160×80 см</li>
+                                        <li>Облицовка пола керамогранитом до 160×80 см</li>
+                                        <li>Укладка мрамора и сланца</li>
+                                        <li>Покраска потолков в два слоя</li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <div class="mt-6 text-center">
+                                <button class="btn-primary text-white px-8 py-2 rounded-lg font-medium" data-page="application">Рассчитать стоимость</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <p class="text-center text-gray-600 mt-10">
+                        При необходимости, тариф может быть дополнен опциями из других тарифов по согласованию.
+                    </p>
+
+                    <!-- Design-project section -->
+                    <div class="mt-20">
+                        <h2 class="text-3xl font-bold text-center text-gray-900 mb-4">Проектирование дизайна интерьера</h2>
+                        <div class="text-center mb-8">
+                            <a href="#" class="btn-primary text-white px-6 py-3 rounded-lg font-medium inline-flex items-center" data-page="application">
+                                <i class="fas fa-phone-alt mr-2"></i>
+                                Обратный звонок
+                            </a>
+                            <p class="mt-4 text-lg">
+                                Позвонить: <a href="tel:+74999911101" class="text-blue-600 font-bold">+7 (499) 991-11-01</a>
+                            </p>
+                        </div>
+
+                        <h3 class="text-2xl font-bold text-center text-gray-900 mb-6">Что войдет в дизайн-проект и состав альбома чертежей</h3>
+
+                        <!-- Composition table -->
+                        <div class="overflow-x-auto mb-12">
+                            <table class="w-full bg-white rounded-2xl shadow-lg">
+                                <thead class="bg-blue-50">
+                                    <tr>
+                                        <th class="px-6 py-4 text-left font-semibold">Состав проекта</th>
+                                        <th class="px-6 py-4 text-center font-semibold">Комфорт</th>
+                                        <th class="px-6 py-4 text-center font-semibold">Премиум</th>
+                                        <th class="px-6 py-4 text-center font-semibold">Все включено</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="divide-y divide-gray-200">
+                                    <tr>
+                                        <td class="px-6 py-4 text-sm text-gray-700">
+                                            <strong>Выезд на объект и замеры</strong><br>
+                                            <span class="text-xs text-gray-500">Замеры необходимы для того, чтобы точно рассчитать объем и стоимость работ и оценить состояние объекта</span>
+                                        </td>
+                                        <td class="px-6 py-4 text-center"><i class="fas fa-check text-green-500"></i></td>
+                                        <td class="px-6 py-4 text-center"><i class="fas fa-check text-green-500"></i></td>
+                                        <td class="px-6 py-4 text-center"><i class="fas fa-check text-green-500"></i></td>
+                                    </tr>
+                                    <tr>
+                                        <td class="px-6 py-4 text-sm text-gray-700"><strong>Пояснительная записка к проектной части</strong></td>
+                                        <td class="px-6 py-4 text-center"><i class="fas fa-check text-green-500"></i></td>
+                                        <td class="px-6 py-4 text-center"><i class="fas fa-check text-green-500"></i></td>
+                                        <td class="px-6 py-4 text-center"><i class="fas fa-check text-green-500"></i></td>
+                                    </tr>
+                                    <tr>
+                                        <td class="px-6 py-4 text-sm text-gray-700">
+                                            <strong>Обмерный план дизайна интерьера</strong><br>
+                                            <span class="text-xs text-gray-500">Чертеж с описанием коммуникаций. Холодное и горячее водоснабжение, отопление, канализация, сигнализация, электрощиток, вентиляционные шахты и прочее</span>
+                                        </td>
+                                        <td class="px-6 py-4 text-center"><i class="fas fa-check text-green-500"></i></td>
+                                        <td class="px-6 py-4 text-center"><i class="fas fa-check text-green-500"></i></td>
+                                        <td class="px-6 py-4 text-center"><i class="fas fa-check text-green-500"></i></td>
+                                    </tr>
+                                    <tr>
+                                        <td class="px-6 py-4 text-sm text-gray-700">
+                                            <strong>Колористический паспорт объекта</strong><br>
+                                            <span class="text-xs text-gray-500">С указанием инженерных коммуникаций, оконных и дверных блоков, радиаторов и т.д.</span>
+                                        </td>
+                                        <td class="px-6 py-4 text-center text-gray-400">—</td>
+                                        <td class="px-6 py-4 text-center"><i class="fas fa-check text-green-500"></i></td>
+                                        <td class="px-6 py-4 text-center"><i class="fas fa-check text-green-500"></i></td>
+                                    </tr>
+                                    <tr>
+                                        <td class="px-6 py-4 text-sm text-gray-700">
+                                            <strong>План монтажа межкомнатных перегородок</strong><br>
+                                            <span class="text-xs text-gray-500">С указанием оконных и дверных блоков, дополнительных инженерных коммуникаций.</span>
+                                        </td>
+                                        <td class="px-6 py-4 text-center"><i class="fas fa-check text-green-500"></i></td>
+                                        <td class="px-6 py-4 text-center"><i class="fas fa-check text-green-500"></i></td>
+                                        <td class="px-6 py-4 text-center"><i class="fas fa-check text-green-500"></i></td>
+                                    </tr>
+                                    <tr>
+                                        <td class="px-6 py-4 text-sm text-gray-700">
+                                            <strong>План зонирования помещений</strong><br>
+                                            <span class="text-xs text-gray-500">С планом расстановки мебели и сантехники</span>
+                                        </td>
+                                        <td class="px-6 py-4 text-center"><i class="fas fa-check text-green-500"></i></td>
+                                        <td class="px-6 py-4 text-center"><i class="fas fa-check text-green-500"></i></td>
+                                        <td class="px-6 py-4 text-center"><i class="fas fa-check text-green-500"></i></td>
+                                    </tr>
+                                    <tr>
+                                        <td class="px-6 py-4 text-sm text-gray-700">
+                                            <strong>Экспертное заключение о законности новой планировки</strong>
+                                        </td>
+                                        <td class="px-6 py-4 text-center text-gray-400">—</td>
+                                        <td class="px-6 py-4 text-center text-gray-400">—</td>
+                                        <td class="px-6 py-4 text-center"><i class="fas fa-check text-green-500"></i></td>
+                                    </tr>
+                                    <tr>
+                                        <td class="px-6 py-4 text-sm text-gray-700">
+                                            <strong>План размещения сантехники</strong><br>
+                                            <span class="text-xs text-gray-500">С габаритными размерами и привязками (согласно утвержденных технологических карт от производителя)</span>
+                                        </td>
+                                        <td class="px-6 py-4 text-center text-gray-400">—</td>
+                                        <td class="px-6 py-4 text-center"><i class="fas fa-check text-green-500"></i></td>
+                                        <td class="px-6 py-4 text-center"><i class="fas fa-check text-green-500"></i></td>
+                                    </tr>
+                                    <tr>
+                                        <td class="px-6 py-4 text-sm text-gray-700"><strong>План потолков</strong><br><span class="text-xs text-gray-500">С указанием декора, карнизов</span></td>
+                                        <td class="px-6 py-4 text-center"><i class="fas fa-check text-green-500"></i></td>
+                                        <td class="px-6 py-4 text-center"><i class="fas fa-check text-green-500"></i></td>
+                                        <td class="px-6 py-4 text-center"><i class="fas fa-check text-green-500"></i></td>
+                                    </tr>
+                                    <tr>
+                                        <td class="px-6 py-4 text-sm text-gray-700"><strong>План размещения осветительных приборов</strong><br><span class="text-xs text-gray-500">С расстановкой мебели</span></td>
+                                        <td class="px-6 py-4 text-center text-gray-400">—</td>
+                                        <td class="px-6 py-4 text-center"><i class="fas fa-check text-green-500"></i></td>
+                                        <td class="px-6 py-4 text-center"><i class="fas fa-check text-green-500"></i></td>
+                                    </tr>
+                                    <tr>
+                                        <td class="px-6 py-4 text-sm text-gray-700"><strong>План расположения выключателей</strong><br><span class="text-xs text-gray-500">С указанием включения групп светильников</span></td>
+                                        <td class="px-6 py-4 text-center"><i class="fas fa-check text-green-500"></i></td>
+                                        <td class="px-6 py-4 text-center"><i class="fas fa-check text-green-500"></i></td>
+                                        <td class="px-6 py-4 text-center"><i class="fas fa-check text-green-500"></i></td>
+                                    </tr>
+                                    <tr>
+                                        <td class="px-6 py-4 text-sm text-gray-700"><strong>План электрических силовых розеток</strong><br><span class="text-xs text-gray-500">Выводы, размещение щитка, привязка размеров</span></td>
+                                        <td class="px-6 py-4 text-center"><i class="fas fa-check text-green-500"></i></td>
+                                        <td class="px-6 py-4 text-center"><i class="fas fa-check text-green-500"></i></td>
+                                        <td class="px-6 py-4 text-center"><i class="fas fa-check text-green-500"></i></td>
+                                    </tr>
+                                    <tr>
+                                        <td class="px-6 py-4 text-sm text-gray-700"><strong>План слаботочных розеток</strong><br><span class="text-xs text-gray-500">В том числе выводов, щита с указанием размеров</span></td>
+                                        <td class="px-6 py-4 text-center"><i class="fas fa-check text-green-500"></i></td>
+                                        <td class="px-6 py-4 text-center"><i class="fas fa-check text-green-500"></i></td>
+                                        <td class="px-6 py-4 text-center"><i class="fas fa-check text-green-500"></i></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <h3 class="text-2xl font-bold text-center text-gray-900 mb-6">Цены на услуги по проектированию интерьера:</h3>
+                        <div class="overflow-x-auto">
+                            <table class="w-full bg-white rounded-2xl shadow-lg">
+                                <thead class="bg-blue-50">
+                                    <tr>
+                                        <th class="px-6 py-4 text-left font-semibold">Площадь</th>
+                                        <th class="px-6 py-4 text-center font-semibold">Все включено</th>
+                                        <th class="px-6 py-4 text-center font-semibold">Стандарт</th>
+                                        <th class="px-6 py-4 text-center font-semibold">Базовый</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="divide-y divide-gray-200">
+                                    <tr>
+                                        <td class="px-6 py-4 text-sm text-gray-700">До 80 кв.м.</td>
+                                        <td class="px-6 py-4 text-center font-semibold text-blue-600">6 000 ₽</td>
+                                        <td class="px-6 py-4 text-center font-semibold text-blue-600">3 500 ₽</td>
+                                        <td class="px-6 py-4 text-center font-semibold text-blue-600">2 500 ₽</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="px-6 py-4 text-sm text-gray-700">От 80 до 151 кв.м.</td>
+                                        <td class="px-6 py-4 text-center font-semibold text-blue-600">7 500 ₽</td>
+                                        <td class="px-6 py-4 text-center font-semibold text-blue-600">4 500 ₽</td>
+                                        <td class="px-6 py-4 text-center font-semibold text-blue-600">3 000 ₽</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="px-6 py-4 text-sm text-gray-700">От 151 до 250 кв.м.</td>
+                                        <td class="px-6 py-4 text-center font-semibold text-blue-600">10 500 ₽</td>
+                                        <td class="px-6 py-4 text-center font-semibold text-blue-600">6 500 ₽</td>
+                                        <td class="px-6 py-4 text-center font-semibold text-blue-600">4 000 ₽</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="px-6 py-4 text-sm text-gray-700">Более 251 кв.м.</td>
+                                        <td class="px-6 py-4 text-center font-semibold text-blue-600">14 000 ₽</td>
+                                        <td class="px-6 py-4 text-center font-semibold text-blue-600">9 500 ₽</td>
+                                        <td class="px-6 py-4 text-center font-semibold text-blue-600">6 000 ₽</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- What You Get Section -->
+                <div class="mt-20">
+                    <h2 class="text-3xl font-bold text-center text-gray-900 mb-10">ВЫ ПОЛУЧИТЕ</h2>
+                    <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+                        <div class="text-center">
+                            <div class="w-16 h-16 bg-blue-100 rounded-xl flex items-center justify-center mx-auto mb-4">
+                                <i class="fas fa-drafting-compass text-blue-600 text-2xl"></i>
+                            </div>
+                            <h3 class="font-bold text-lg mb-2">Комплексный подход</h3>
+                            <p class="text-gray-600 text-sm">К созданию и реализации дизайн-проекта</p>
+                        </div>
+                        <div class="text-center">
+                            <div class="w-16 h-16 bg-blue-100 rounded-xl flex items-center justify-center mx-auto mb-4">
+                                <i class="fas fa-clipboard-check text-blue-600 text-2xl"></i>
+                            </div>
+                            <h3 class="font-bold text-lg mb-2">Контроль</h3>
+                            <p class="text-gray-600 text-sm">Отчет технадзора по каждому этапу выполненных работ</p>
+                        </div>
+                        <div class="text-center">
+                            <div class="w-16 h-16 bg-blue-100 rounded-xl flex items-center justify-center mx-auto mb-4">
+                                <i class="fas fa-lightbulb text-blue-600 text-2xl"></i>
+                            </div>
+                            <h3 class="font-bold text-lg mb-2">Индивидуальные решения</h3>
+                            <p class="text-gray-600 text-sm">Несколько вариантов планировок и зонирования</p>
+                        </div>
+                        <div class="text-center">
+                            <div class="w-16 h-16 bg-blue-100 rounded-xl flex items-center justify-center mx-auto mb-4">
+                                <i class="fas fa-cube text-blue-600 text-2xl"></i>
+                            </div>
+                            <h3 class="font-bold text-lg mb-2">3D дизайн макетов</h3>
+                            <p class="text-gray-600 text-sm">Разработка 3D визуализации дизайна интерьера</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- Contacts Page -->
+    <div id="contacts" class="page">
+        <section class="py-20 bg-white">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="text-center mb-16">
+                    <h1 class="text-4xl font-bold text-gray-900 mb-4">Контакты</h1>
+                    <p class="text-xl text-gray-600">Свяжитесь с нами любым удобным способом</p>
+                </div>
+                
+                <div class="grid lg:grid-cols-2 gap-16">
+                    <div>
+                        <h2 class="text-2xl font-bold text-gray-900 mb-8">Контактная информация</h2>
+                        
+                        <div class="space-y-8">
+                            <div class="flex items-start">
+                                <div class="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center mr-4">
+                                    <i class="fas fa-map-marker-alt text-blue-600"></i>
+                                </div>
+                                <div>
+                                    <h3 class="font-semibold text-gray-900 mb-2">Адрес офиса</h3>
+                                    <p class="text-gray-600">г. Санкт-Петербург,Октябрьская набережная , 10к1<br>
+                                    </p>
+                                </div>
+                            </div>
+                            
+                            <div class="flex items-start">
+                                <div class="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center mr-4">
+                                    <i class="fas fa-phone text-blue-600"></i>
+                                </div>
+                                <div>
+                                    <h3 class="font-semibold text-gray-900 mb-2">Телефон</h3>
+                                    <p class="text-gray-600">
+                                        <a href="tel:+74951234567" class="hover:text-blue-600">+7 (911) 007-90-31</a><br>
+                                        
+                                    </p>
+                                </div>
+                            </div>
+                            
+                            <div class="flex items-start">
+                                <div class="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center mr-4">
+                                    <i class="fas fa-envelope text-blue-600"></i>
+                                </div>
+                                <div>
+                                    <h3 class="font-semibold text-gray-900 mb-2">Email</h3>
+                                    <p class="text-gray-600">
+                                        <a href="mailto:info@samoletsplus.ru" class="hover:text-blue-600">SamoletPlus02-00191@yandex.ru</a><br>
+                                        
+                                    </p>
+                                </div>
+                            </div>
+                            
+                            <div class="flex items-start">
+                                <div class="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center mr-4">
+                                    <i class="fas fa-clock text-blue-600"></i>
+                                </div>
+                                <div>
+                                    <h3 class="font-semibold text-gray-900 mb-2">Режим работы</h3>
+                                    <p class="text-gray-600">
+                                        Пн - Пт: 9:00 - 19:00<br>
+                                        Сб - Вс: 10:00 - 17:00
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="mt-8">
+                            <h3 class="font-semibold text-gray-900 mb-4">Мы в соцсетях</h3>
+                            <div class="flex space-x-4">
+                                <a href="#" class="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center text-blue-600 hover:bg-blue-600 hover:text-white transition-all">
+                                    <i class="fab fa-vk"></i>
+                                </a>
+                                <a href="#" class="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center text-blue-600 hover:bg-blue-600 hover:text-white transition-all">
+                                    <i class="fab fa-telegram"></i>
+                                </a>
+                                <a href="#" class="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center text-blue-600 hover:bg-blue-600 hover:text-white transition-all">
+                                    <i class="fab fa-whatsapp"></i>
+                                </a>
+                                <a href="#" class="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center text-blue-600 hover:bg-blue-600 hover:text-white transition-all">
+                                    <i class="fab fa-instagram"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div>
+                        <div class="bg-gray-50 p-8 rounded-2xl">
+                            <h3 class="text-2xl font-bold text-gray-900 mb-6">Схема проезда</h3>
+                            <iframe
+                                class="w-full h-96 rounded-xl"
+                                frameborder="0"
+                                style="border:0"
+                                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d1999.963507870634!2d30.343684416096784!3d59.96558288190642!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x469db5d9a1c9c2b3%3A0x500ebbde1746400!2z0J7RgdC90L7QstC90LAg0YHQsNC90LrRltGD0L3QvdGW0LrQsA!5e0!3m2!1sru!2sru!4v1680000000000"
+                                allowfullscreen=""
+                                aria-hidden="false"
+                                tabindex="0"
+                            ></iframe>
+                            <p class="text-sm text-gray-600 mt-4">
+                                <strong>Как добраться:</strong><br>
+                                • Метро: Новочеркасская (15 минут пешком)<br>
+                                • Авто: Бесплатная парковка у здания
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- Application Page -->
+    <div id="application" class="page">
+        <section class="py-20 bg-gray-50">
+            <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="text-center mb-12">
+                    <h1 class="text-4xl font-bold text-gray-900 mb-4">Оставить заявку</h1>
+                    <p class="text-xl text-gray-600">Заполните форму и мы свяжемся с вами в течение 15 минут</p>
+                </div>
+                
+                <form class="bg-white p-8 rounded-2xl shadow-lg" id="application-form">
+                    <div class="grid md:grid-cols-2 gap-6 mb-6">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Имя *</label>
+                            <input type="text" name="name" required class="form-input w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Телефон *</label>
+                            <input type="tel" name="phone" required class="form-input w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                        </div>
+                    </div>
+                    
+                    <div class="mb-6">
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Email</label>
+                        <input type="email" name="email" class="form-input w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                    </div>
+                    
+                    <div class="mb-6">
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Тип услуги</label>
+                        <select name="service" class="form-input w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                            <option value="">Выберите услугу</option>
+                            <option value="sale">Продажа недвижимости</option>
+                            <option value="repair">Ремонт квартир</option>
+                            <option value="house">Ремонт загородных домов</option>
+                            <option value="design">Дизайн-проект</option>
+                            <option value="demolition">Демонтажные работы</option>
+                        </select>
+                    </div>
+                    
+                    <div class="mb-6">
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Площадь объекта (м²)</label>
+                        <input type="number" name="area" min="0" class="form-input w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                    </div>
+                    
+                    <div class="mb-6">
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Комментарий</label>
+                        <textarea name="message" rows="4" class="form-input w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" placeholder="Расскажите о вашем проекте..."></textarea>
+                    </div>
+                    
+                    <div class="mb-6">
+                        <label class="flex items-center">
+                            <input type="checkbox" required class="rounded border-gray-300 text-blue-600 focus:ring-blue-500">
+                            <span class="ml-2 text-sm text-gray-700">
+                                Я согласен с <a href="#" class="text-blue-600 hover:underline">условиями обработки персональных данных</a>
+                            </span>
+                        </label>
+                    </div>
+                    
+                    <button type="submit" class="w-full btn-primary text-white py-4 rounded-lg text-lg font-semibold">
+                        Отправить заявку
+                    </button>
+                </form>
+                
+                <div class="mt-8 text-center">
+                    <p class="text-gray-600">
+                        Или позвоните нам: 
+                        <a href="tel:+74951234567" class="text-blue-600 font-semibold hover:underline">+7 (495) 123-45-67</a>
+                    </p>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-gray-900 text-white py-12">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid md:grid-cols-4 gap-8">
+                <div>
+                    <div class="text-2xl font-bold mb-4">
+                        <i class="fas fa-plane text-blue-400 mr-2"></i>
+                        САМОЛЕТ ПЛЮС
+                    </div>
+                    <p class="text-gray-400 leading-relaxed">
+                        Профессиональный и качественный дезайнерский ремонт под ключ в Санкт-Петербурге и области.
+                    </p>
+                </div>
+                
+                <div>
+                    <h3 class="text-lg font-semibold mb-4">Услуги</h3>
+                    <ul class="space-y-2 text-gray-400">
+                        
+                        <li><a href="#" class="hover:text-white transition-colors" data-page="services">Ремонт квартир</a></li>
+                        <li><a href="#" class="hover:text-white transition-colors" data-page="services">Ремонт домов</a></li>
+                        <li><a href="#" class="hover:text-white transition-colors" data-page="services">Дизайн-проекты</a></li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h3 class="text-lg font-semibold mb-4">Контакты</h3>
+                    <ul class="space-y-2 text-gray-400">
+                        <li>г. Санкт-Петербург, Октябрьская набережная, 10к1</li>
+                        <li><a href="tel:+74951234567" class="hover:text-white transition-colors">+7 (911) 007-90-31</a></li>
+                        <li><a href="mailto:info@samoletsplus.ru" class="hover:text-white transition-colors">SamoletPlus02-00191@yandex.ru</a></li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h3 class="text-lg font-semibold mb-4">Рабочее время</h3>
+                    <ul class="space-y-2 text-gray-400">
+                        <li>Пн - Пт: 9:00 - 19:00</li>
+                        <li>Сб - Вс: 10:00 - 17:00</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="border-t border-gray-800 mt-8 pt-8 text-center text-gray-400">
+                <p>&copy; 2024 САМОЛЕТ ПЛЮС. Все права защищены.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Page Navigation
+        const pages = document.querySelectorAll('.page');
+        const navLinks = document.querySelectorAll('[data-page]');
+        
+        function showPage(pageId) {
+            pages.forEach(page => {
+                page.classList.remove('active');
+            });
+            
+            const targetPage = document.getElementById(pageId);
+            if (targetPage) {
+                targetPage.classList.add('active');
+                
+                // Scroll to top
+                window.scrollTo({
+                    top: 0,
+                    behavior: 'smooth'
+                });
+                
+                // Animate page content
+                const elements = targetPage.querySelectorAll('.loading');
+                elements.forEach((el, index) => {
+                    setTimeout(() => {
+                        el.classList.add('loaded');
+                    }, index * 100);
+                });
+            }
+        }
+        
+        // Navigation event listeners
+        navLinks.forEach(link => {
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+                const pageId = link.getAttribute('data-page');
+                showPage(pageId);
+                
+                // Close mobile menu if open
+                document.getElementById('mobile-menu').classList.remove('open');
+            });
+        });
+        
+        // Mobile menu toggle
+        document.getElementById('mobile-menu-btn').addEventListener('click', () => {
+            document.getElementById('mobile-menu').classList.add('open');
+        });
+        
+        document.getElementById('close-menu').addEventListener('click', () => {
+            document.getElementById('mobile-menu').classList.remove('open');
+        });
+        
+        // Form submission
+        document.getElementById('application-form').addEventListener('submit', (e) => {
+            e.preventDefault();
+            
+            // Show success message
+            alert('Спасибо за заявку! Мы свяжемся с вами в течение 15 минут.');
+            
+            // Reset form
+            e.target.reset();
+        });
+        
+        // Smooth scroll for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+        
+        // Add loading class to elements
+        document.addEventListener('DOMContentLoaded', () => {
+            const elementsToAnimate = document.querySelectorAll('.service-card, .price-card, .portfolio-item');
+            elementsToAnimate.forEach(el => {
+                el.classList.add('loading');
+            });
+            
+            // Trigger first load animation
+            setTimeout(() => {
+                const firstPageElements = document.querySelector('#home').querySelectorAll('.loading');
+                firstPageElements.forEach((el, index) => {
+                    setTimeout(() => {
+                        el.classList.add('loaded');
+                    }, index * 100);
+                });
+            }, 100);
+        });
+        
+        // Portfolio carousel
+        document.querySelectorAll('.portfolio-item').forEach(item => {
+            const carousel = item.querySelector('.carousel');
+            const images = carousel.querySelectorAll('img');
+            const leftBtn = carousel.querySelector('.arrow-left');
+            const rightBtn = carousel.querySelector('.arrow-right');
+            let currentIdx = 0;
+
+            function showImage(idx) {
+                images.forEach((img, i) => {
+                    img.style.opacity = i === idx ? '1' : '0';
+                });
+            }
+            function nextImage() {
+                currentIdx = (currentIdx + 1) % images.length;
+                showImage(currentIdx);
+            }
+            function prevImage() {
+                currentIdx = (currentIdx - 1 + images.length) % images.length;
+                showImage(currentIdx);
+            }
+
+            leftBtn.addEventListener('click', prevImage);
+            rightBtn.addEventListener('click', nextImage);
+            showImage(currentIdx);
+        });
+
+        // Parallax effect for hero section
+        window.addEventListener('scroll', () => {
+            const scrolled = window.pageYOffset;
+            const parallax = document.querySelector('.hero-overlay');
+            if (parallax) {
+                const speed = scrolled * 0.5;
+                parallax.style.transform = `translateY(${speed}px)`;
+            }
+        });
+        
+        // Form validation
+        const inputs = document.querySelectorAll('.form-input');
+        inputs.forEach(input => {
+            input.addEventListener('blur', () => {
+                if (input.hasAttribute('required') && !input.value.trim()) {
+                    input.style.borderColor = '#ef4444';
+                } else {
+                    input.style.borderColor = '#d1d5db';
+                }
+            });
+        });
+    </script>
+</body>
+</html>
